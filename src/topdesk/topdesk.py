@@ -71,7 +71,13 @@ class topdesk():
             logger.warning(f"Asset {asset_name} cannot be update with these values because fields don't exist")
             return response.json()
         else:
-            response = response.json()
+            try:
+                response = response.json()
+            except Exception as e:
+                logger.error("Failed to json decode response from Topdesk")
+                logger.debug(e)
+                logger.error(response.text)
+                return False
             if response["pageError"] == "Diese Karte ist zwischenzeitlich geändert worden.":
                 logger.debug(f"Unable to update asset {asset_name} because it is disabled")
             else:
