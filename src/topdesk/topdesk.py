@@ -76,7 +76,9 @@ class topdesk():
             except Exception as e:
                 logger.error("Failed to json decode response from Topdesk")
                 logger.debug(e)
-                logger.error(response.text)
+                logger.debug(response.text)
+                logger.error(response.url)
+                logger.error(response.status_code)
                 return False
             if response["pageError"] == "Diese Karte ist zwischenzeitlich geändert worden.":
                 logger.debug(f"Unable to update asset {asset_name} because it is disabled")
