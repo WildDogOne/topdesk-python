@@ -32,10 +32,11 @@ class topdesk():
         :param output: Output Array
         :return: Returns array of Data
         """
-        default_fields = "type,@status,archived,name,host-name,@assignments,mac-address,ip-address,host-group,technical-owner"
+        default_fields = "type,@status,archived,name,host-name,@assignments,mac-address,ip-address,host-group,technical-owner,discovery-host-name,mem-device-name"
         params = {
             "fields": default_fields,
-            "$orderby": "name asc"
+            "$orderby": "name asc",
+            "archived": False
         }
         if td_filter:
             params["$filter"] = td_filter
