@@ -55,11 +55,11 @@ class topdesk():
             return output
         return output
 
-    def get_assets(self, fields=None, archived=False):
+    def get_assets(self, fields=None, archived=False, td_filter=None):
         """
         :return: Returns all assets found
         """
-        return self.td_get("assetmgmt/assets", fields=fields, archived=archived)
+        return self.td_get("assetmgmt/assets", fields=fields, archived=archived, td_filter=td_filter)
 
     def update_asset(self, asset_id, payload, asset_name="N/A"):
         url = self.base_url + "assetmgmt/assets/" + asset_id
