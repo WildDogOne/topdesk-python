@@ -25,8 +25,10 @@ class topdesk():
         self.password = config["password"]
         self.base_url = "https://" + config["base_url"] + "/tas/api/"
 
-    def td_get(self, path, td_filter="", output=[], fields=None):
+    def td_get(self, path, td_filter="", output=[], fields=None, archived=None):
         """
+        :param archived: If True only Archived records will be returned, on false only not archived records will be returned. None for all records
+        :param fields: Comma seperated list of fields that you want to get from API
         :param path: API Path to get
         :param td_filter: Filter for API Path
         :param output: Output Array
@@ -38,7 +40,7 @@ class topdesk():
         params = {
             "fields": fields,
             "$orderby": "name asc",
-            "archived": False
+            "archived": archived
         }
         if td_filter:
             params["$filter"] = td_filter
@@ -53,11 +55,11 @@ class topdesk():
             return output
         return output
 
-    def get_assets(self, fields=None):
+    def get_assets(self, fields=None, archived=False):
         """
         :return: Returns all assets found
         """
-        return self.td_get("assetmgmt/assets", fields=fields)
+        return self.td_get("assetmgmt/assets", fields=fields, archived=archived)
 
     def update_asset(self, asset_id, payload, asset_name="N/A"):
         url = self.base_url + "assetmgmt/assets/" + asset_id
