@@ -25,7 +25,7 @@ class topdesk():
         self.password = config["password"]
         self.base_url = "https://" + config["base_url"] + "/tas/api/"
 
-    def td_get(self, path, td_filter="", output=[], fields=None, archived=False):
+    def td_get(self, path, td_filter="", fields=None, archived=None):
         """
         :param archived: If True only Archived records will be returned, on false only not archived records will be returned. None for all records
         :param fields: Comma seperated list of fields that you want to get from API
@@ -40,19 +40,24 @@ class topdesk():
         params = {
             "fields": fields,
             "$orderby": "name asc",
-            "archived": archived
+            "archived": archived,
+            "pageSize": 1000,
+            "pageStart": 0
         }
         if td_filter:
             params["$filter"] = td_filter
-        url = self.base_url + path  # + "?" + td_filter
-        response = requests.get(url, auth=HTTPBasicAuth(self.username, self.password), params=params)
-        if response.status_code == 206:
-            output = output + response.json()["dataSet"]
-            next = "name gt '" + output[len(output) - 1]["name"] + "'"
-            output = self.td_get(path, next, output)
-        if response.status_code == 200:
-            output = output + response.json()["dataSet"]
-            return output
+        url = self.base_url + path
+        output = []
+        while True:
+            response = requests.get(url, auth=HTTPBasicAuth(self.username, self.password), params=params)
+            if response.status_code == 206:
+                output = output + response.json()["dataSet"]
+                params["pageStart"] += params["pageSize"]
+            if response.status_code == 200:
+                dataset = response.json()["dataSet"]
+                if len(dataset) > 0:
+                    output = output + dataset
+                break
         return output
 
     def get_assets(self, fields=None, archived=False, td_filter=None):
