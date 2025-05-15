@@ -25,7 +25,7 @@ class topdesk():
         self.password = config["password"]
         self.base_url = "https://" + config["base_url"] + "/tas/api/"
 
-    def td_get(self, path, td_filter="", output=[], fields=None, archived=None):
+    def td_get(self, path, td_filter="", output=[], fields=None, archived=False):
         """
         :param archived: If True only Archived records will be returned, on false only not archived records will be returned. None for all records
         :param fields: Comma seperated list of fields that you want to get from API
